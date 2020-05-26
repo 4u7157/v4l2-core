@@ -153,7 +153,8 @@ void *vb2_ion_private_alloc(void *alloc_ctx, size_t size)
 		ION_FLAG_CACHED | ION_FLAG_CACHED_NEEDS_SYNC : 0;
 
 	if ((ion_flag(ctx->flags) & VB2ION_CTX_DRM_VIDEO) ||
-			(ion_flag(ctx->flags) & VB2ION_CTX_DRM_MFCFW))
+			(ion_flag(ctx->flags) & VB2ION_CTX_DRM_MFCFW) ||
+			(ion_flag(ctx->flags) & VB2ION_CTX_DRM_STREAM))
 		flags |= ION_FLAG_PROTECTED;
 
 	buf->handle = ion_alloc(ctx->client, size, ctx->alignment,
@@ -572,7 +573,7 @@ static struct vm_area_struct *vb2_ion_get_vma(struct device *dev,
 		return NULL;
 	}
 
-	while (new_vma->vm_prev)
+	while (new_vma && new_vma->vm_prev)
 		new_vma = new_vma->vm_prev;
 
 	return new_vma;
